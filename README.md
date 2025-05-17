@@ -1,43 +1,47 @@
-# openwrt_autoupdate
+# rebooter.sh
 
-This script automates the process of updating and upgrading packages on an OpenWrt router using the `opkg` package manager. It logs all actions, including errors, to a file named `auto_update_log.log` for easy tracking and debugging.
+Este script está diseñado para reiniciar un router con una llamada. Puede ser invocado directamente o desde otros scripts, como `openwrt_autoupdate.sh`.
 
-## How It Works
+## Cómo funciona
 
-1. Captures the current timestamp to log the start and end times of the update process.
-2. Refreshes the package list using `opkg update`.
-3. Retrieves a list of upgradable packages and iterates through them to perform upgrades.
-4. Logs all actions, including package names and any errors, to `auto_update_log.log`.
+1. **Sin argumentos**: Si el script se ejecuta sin argumentos, registra un mensaje indicando que se recibió una solicitud de reinicio sin argumentos.
+2. **Con argumentos**: Si se proporciona un argumento, registra un mensaje indicando el origen del reinicio y procede a reiniciar el sistema.
+3. **Registro de eventos**: Todos los eventos se registran en un archivo llamado `rebooter.log`.
 
-## Usage
+## Uso
 
-1. Place the script in your OpenWrt router.
-2. Make the script executable:
+### Ejecución directa
+
+1. Asegúrate de que el script sea ejecutable:
    ```bash
-   chmod +x openwrt_autoupdate
-3. Run the script.
-    ```bash
-    ./openwrt_autoupdate
+   chmod +x rebooter.sh
+   ```
 
-4. Check the `auto_update_log.log` file for details about the update process.
+2. Ejecuta el script:
+   - Sin argumentos:
+     ```bash
+     ./rebooter.sh
+     ```
+   - Con un argumento (por ejemplo, "manual"):
+     ```bash
+     ./rebooter.sh manual
+     ```
 
-## Log File
+### Integración con otros scripts
 
-The script appends all logs to `auto_update_log.log` This includes:
+Este script puede ser llamado desde otros scripts, como `openwrt_autoupdate.sh`, para automatizar el proceso de reinicio.
 
-- Start and end timestamps.
-- Output from opkg update and opkg upgrade.
-- Any errors encountered during the process.
+## Registro
 
-## Further steps
+El script registra los siguientes eventos en el archivo `rebooter.log`:
 
-**Potential Improvements**:
+- **Sin argumentos**:  
+  `YYYY-MM-DD-THH:MM:SS: receive reboot without argument`
+- **Con argumentos**:  
+  `YYYY-MM-DD-THH:MM:SS: reboot from : <argumento>`
 
-- Use a unique timestamp for the end time instead of reusing the initial time variable, as the update process duration might vary.
+## Mejoras potenciales
 
-- Add error handling to detect and respond to failures during opkg update or opkg upgrade.
-
-- Consider rotating or archiving the log file to prevent it from growing indefinitely.
-
-- Automate the script by month or specifict datetime.
-
+- Validar los argumentos proporcionados para evitar entradas no deseadas.
+- Manejar errores en el proceso de reinicio.
+- Rotar o archivar el archivo de registro `rebooter.log` para evitar que crezca indefinidamente.
